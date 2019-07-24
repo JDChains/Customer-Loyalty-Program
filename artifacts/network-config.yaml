@@ -1,7 +1,9 @@
 ---
 # --------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
 # The network connection profile provides client applications the information about the target
 # blockchain network that are necessary for the applications to interact with it. 
+# --------------------------------------------------------------------------------------------
 # --------------------------------------------------------------------------------------------
 
 name: "jeabc"
@@ -121,7 +123,7 @@ certificateAuthorities:
     registrar:
       - enrollId: admin
         enrollSecret: adminpw
-    # [Optional] The optional name of the CA.
+   
     caName: ca-customer
 
   ca-company:
@@ -133,7 +135,7 @@ certificateAuthorities:
     registrar:
       - enrollId: admin
         enrollSecret: adminpw
-    # [Optional] The optional name of the CA.
+   
     caName: ca-company
 
   
