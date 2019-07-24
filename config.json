@@ -1,0 +1,6 @@
+{
+    "host": "0.0.0.0",
+    "port": "4002",
+    "jwt_expiretime": "36000",
+    "CC_SRC_PATH": "../artifacts"
+}
