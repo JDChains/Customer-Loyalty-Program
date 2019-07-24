@@ -1,0 +1,139 @@
+---
+# --------------------------------------------------------------------------------------------
+# The network connection profile provides client applications the information about the target
+# blockchain network that are necessary for the applications to interact with it. 
+# --------------------------------------------------------------------------------------------
+
+name: "jeabc"
+description: "jeabc Network"
+version: "1.0"
+
+channels:
+  jeabc-channel:
+    orderers:
+      - orderer1.jeabc.com
+      - orderer2.jeabc.com
+      - orderer3.jeabc.com
+
+    peers:
+      peer0.customer.jeabc.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      peer0.company.jeabc.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      
+
+    chaincodes:
+      - jeabc:v0
+
+organizations:
+
+  Customer:
+    mspid: CustomerMSP
+    peers:
+      - peer0.customer.jeabc.com
+
+    certificateAuthorities:
+      - ca-customer
+
+    adminPrivateKey:
+      path: artifacts/channel/crypto-config/peerOrganizations/customer.jeabc.com/users/Admin@customer.jeabc.com/msp/keystore/d60af3111c2ebb067a99d281fa5d9a674c2062fe23ee7a5d630ad6497a2b38ed_sk
+    signedCert:
+      path: artifacts/channel/crypto-config/peerOrganizations/customer.jeabc.com/users/Admin@customer.jeabc.com/msp/signcerts/Admin@customer.jeabc.com-cert.pem
+
+  Company:
+    mspid: CompanyMSP
+    peers:
+      - peer0.company.jeabc.com
+
+    certificateAuthorities:
+      - ca-company
+    adminPrivateKey:
+      path: artifacts/channel/crypto-config/peerOrganizations/company.jeabc.com/users/Admin@company.jeabc.com/msp/keystore/d02377b282ac05adc559658b3ac4d366db078ab195577f80540e8b0a9d6c44f5_sk
+    signedCert:
+      path: artifacts/channel/crypto-config/peerOrganizations/company.jeabc.com/users/Admin@company.jeabc.com/msp/signcerts/Admin@company.jeabc.com-cert.pem
+
+  
+
+
+orderers:
+  orderer1.jeabc.com:
+    url: grpcs://localhost:15301
+    grpcOptions:
+      ssl-target-name-override: orderer1.jeabc.com
+      grpc-max-send-message-length: -1
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/ordererOrganizations/jeabc.com/orderers/orderer1.jeabc.com/tls/ca.crt
+
+  orderer2.jeabc.com:
+    url: grpcs://localhost:15302
+    grpcOptions:
+      ssl-target-name-override: orderer2.jeabc.com
+      grpc-max-send-message-length: -1
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/ordererOrganizations/jeabc.com/orderers/orderer2.jeabc.com/tls/ca.crt
+
+  orderer3.jeabc.com:
+    url: grpcs://localhost:15303
+    grpcOptions:
+      ssl-target-name-override: orderer3.jeabc.com
+      grpc-max-send-message-length: -1
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/ordererOrganizations/jeabc.com/orderers/orderer3.jeabc.com/tls/ca.crt
+
+peers:
+
+  peer0.customer.jeabc.com:
+    # this URL is used to send endorsement and query requests
+    url: grpcs://localhost:15321
+    # this URL is used to connect the EventHub and registering event listeners
+    eventUrl: grpcs://localhost:15323
+    grpcOptions:
+      ssl-target-name-override: peer0.customer.jeabc.com
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/customer.jeabc.com/peers/peer0.customer.jeabc.com/tls/ca.crt
+
+  peer0.company.jeabc.com:
+    url: grpcs://localhost:15333
+    eventUrl: grpcs://localhost:15335
+    grpcOptions:
+      ssl-target-name-override: peer0.company.jeabc.com
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/company.jeabc.com/peers/peer0.company.jeabc.com/tls/ca.crt
+
+  
+
+
+certificateAuthorities:
+  ca-customer:
+    url: https://localhost:15311
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/customer.jeabc.com/ca/ca.customer.jeabc.com-cert.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: ca-customer
+
+  ca-company:
+    url: https://localhost:15312
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/company.jeabc.com/ca/ca.company.jeabc.com-cert.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: ca-company
+
+  

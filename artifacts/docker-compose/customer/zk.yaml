@@ -1,0 +1,110 @@
+
+version: '3.2'
+
+networks:
+    jeabc:
+        external: 
+            name: jeabc
+volumes:
+    z0_data:
+    z0_data_log:
+    z1_data:
+    z1_data_log:
+    z2_data:
+    z2_data_log:
+
+
+services:
+
+    z0:
+        networks:
+            jeabc:
+                aliases:
+                    - zookeeper0
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+                delay: 10s
+                max_attempts: 30
+            placement:
+                constraints:
+                    - node.hostname == jeadigital-HP-348-G4
+        image: hyperledger/fabric-zookeeper
+        hostname: zookeeper0
+        environment:
+          - ZOO_MY_ID=1
+          - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+        volumes:
+            - type: volume
+              source: z0_data
+              target: /data
+            - type: volume
+              source: z0_data_log
+              target: /datalog
+        ports:
+          - '2181'
+          - '2888'
+          - '3888'
+
+    z1:
+        networks:
+            jeabc:
+                aliases:
+                    - zookeeper1
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+                delay: 10s
+                max_attempts: 30
+            placement:
+                constraints:
+                    - node.hostname == jeadigital-HP-348-G4
+        image: hyperledger/fabric-zookeeper
+        hostname: zookeeper1
+        environment:
+          - ZOO_MY_ID=2
+          - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+        volumes:
+            - type: volume
+              source: z1_data
+              target: /data
+            - type: volume
+              source: z1_data_log
+              target: /datalog
+        ports:
+          - '2181'
+          - '2888'
+          - '3888'
+
+    z2:
+        networks:
+            jeabc:
+                aliases:
+                    - zookeeper2
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+                delay: 10s
+                max_attempts: 30
+            placement:
+                constraints:
+                    - node.hostname == jeadigital-HP-348-G4
+        image: hyperledger/fabric-zookeeper
+        hostname: zookeeper2
+        environment:
+          - ZOO_MY_ID=3
+          - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+        volumes:
+            - type: volume
+              source: z2_data
+              target: /data
+            - type: volume
+              source: z2_data_log
+              target: /datalog
+        ports:
+          - '2181'
+          - '2888'
+          - '3888'

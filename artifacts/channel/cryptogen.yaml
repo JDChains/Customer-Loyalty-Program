@@ -1,0 +1,32 @@
+# ---------------------------------------------------------------------------
+# "OrdererOrgs" - Definition of organizations managing orderer nodes
+# ---------------------------------------------------------------------------
+OrdererOrgs:
+  - Name: Orderer
+    Domain: jeabc.com
+    Specs:
+      - Hostname: orderer1
+      - Hostname: orderer2
+      - Hostname: orderer3
+
+# ---------------------------------------------------------------------------
+# "PeerOrgs" - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  - Name: Customer
+    Domain: customer.jeabc.com
+    EnableNodeOUs: false
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  - Name: Company
+    Domain: company.jeabc.com
+    EnableNodeOUs: false
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  

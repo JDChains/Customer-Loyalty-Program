@@ -1,0 +1,12 @@
+---
+
+name: "jeabc-company"
+description: "jeabc Network "
+version: "1.0"
+
+client:
+  organization: Company
+  credentialStore:
+    path: "./key/fabric-client-kv-company"
+    cryptoStore:
+      path: "./key/cryptoStore/company"

@@ -1,0 +1,37 @@
+
+version: '3.2'
+
+networks:
+    jeabc:
+        external: 
+            name: jeabc
+volumes:
+    couchdb_peer0_company:
+
+services:
+
+    peer0_company:
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 3
+            placement:
+                constraints:
+                    - node.hostname == jeadigital-HP-348-G4
+        image: hyperledger/fabric-couchdb
+        environment:
+          - COUCHDB_USER=root
+          - COUCHDB_PASSWORD=root
+        hostname: couchdb.peer0.company.jeabc.com
+        volumes:
+            - type: volume
+              source: couchdb_peer0_company
+              target: /opt/couchdb/data
+        ports:
+          - 5985:5984
+        networks:
+          jeabc:
+            aliases:
+                - couchdb.peer0.company.jeabc.com

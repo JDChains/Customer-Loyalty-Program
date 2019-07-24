@@ -1,0 +1,333 @@
+# ---------------------------------------------------------------------------------------------
+# This docker compose file bring up the Docker containers for run Hyperledger Fabric Network
+# ---------------------------------------------------------------------------------------------
+version: '2'
+
+networks:
+  network:
+
+services:
+
+  mysql.ca.customer:
+    container_name: mysql.ca.customer
+    extends:
+      file: base.yaml
+      service: mysql-base
+    volumes:
+      - ./Backup/Customer/CA:/var/lib/mysql
+    ports:
+      - 5000:3306
+    networks:
+      - network
+
+  mysql.ca.company:
+    container_name: mysql.ca.company
+    extends:
+      file: base.yaml
+      service: mysql-base
+    volumes:
+      - ./Backup/Company/CA:/var/lib/mysql
+    ports:
+      - 5001:3306
+    networks:
+      - network
+
+  
+
+  ca.customer.jeabc.com:
+    container_name: ca.customer.jeabc.com
+    image: hyperledger/fabric-ca:1.1.0
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-customer
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.customer.jeabc.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/9a52bde093bba36f2e832167c3ae8dc3f553c3e282e9613dd16cab6dc9044b13_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.customer.jeabc.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/9a52bde093bba36f2e832167c3ae8dc3f553c3e282e9613dd16cab6dc9044b13_sk
+      - FABRIC_CA_SERVER_DB_TYPE=mysql
+      - FABRIC_CA_SERVER_DB_DATASOURCE=root:${MYSQL_PASSWORD}@tcp(mysql.ca.customer:3306)/fabric_ca?parseTime=true
+    ports:
+      - "15311:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.customer.jeabc.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/9a52bde093bba36f2e832167c3ae8dc3f553c3e282e9613dd16cab6dc9044b13_sk'
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/customer.jeabc.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    networks:
+      - network
+    depends_on:
+      - mysql.ca.customer
+
+  ca.company.jeabc.com:
+    container_name: ca.company.jeabc.com
+    image: hyperledger/fabric-ca:1.1.0
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-company
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.company.jeabc.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/d71d9fc239b29863b140bbc7205e3c5303ab0fdb319f0ed4c7f7f4838b92efab_sk
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.company.jeabc.com-cert.pem
+      - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/d71d9fc239b29863b140bbc7205e3c5303ab0fdb319f0ed4c7f7f4838b92efab_sk
+      - FABRIC_CA_SERVER_DB_TYPE=mysql
+      - FABRIC_CA_SERVER_DB_DATASOURCE=root:${MYSQL_PASSWORD}@tcp(mysql.ca.company:3306)/fabric_ca?parseTime=true
+    ports:
+      - "15312:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.company.jeabc.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/d71d9fc239b29863b140bbc7205e3c5303ab0fdb319f0ed4c7f7f4838b92efab_sk'
+    volumes:
+      - ./channel/crypto-config/peerOrganizations/company.jeabc.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    networks:
+      - network
+    depends_on:
+      - mysql.ca.company
+
+  
+
+  zookeeper0:
+    container_name: zookeeper0.jeabc.com
+    extends:
+      file: base.yaml
+      service: zookeeper-base
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+    volumes:
+      - ./Backup/Zookeeper/zk0/data:/data
+      - ./Backup/Zookeeper/zk0/datalog:/datalog
+    networks:
+      - network
+
+  zookeeper1:
+    container_name: zookeeper1.jeabc.com
+    extends:
+      file: base.yaml
+      service: zookeeper-base
+    environment:
+      - ZOO_MY_ID=2
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+    volumes:
+      - ./Backup/Zookeeper/zk1/data:/data
+      - ./Backup/Zookeeper/zk1/datalog:/datalog
+    networks:
+      - network
+
+  zookeeper2:
+    container_name: zookeeper2.jeabc.com
+    extends:
+      file: base.yaml
+      service: zookeeper-base
+    environment:
+      - ZOO_MY_ID=3
+      - ZOO_SERVERS=server.1=zookeeper0:2888:3888 server.2=zookeeper1:2888:3888 server.3=zookeeper2:2888:3888
+    volumes:
+      - ./Backup/Zookeeper/zk2/data:/data
+      - ./Backup/Zookeeper/zk2/datalog:/datalog
+    networks:
+      - network
+
+  kafka0:
+    container_name: kafka0.jeabc.com
+    extends:
+      file: base.yaml
+      service: kafka-base
+    environment:
+      - KAFKA_BROKER_ID=0
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    volumes:
+      - ./Backup/Kafka/kafka0:/tmp/kafka-logs
+    networks:
+      - network
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  kafka1:
+    container_name: kafka1.jeabc.com
+    extends:
+      file: base.yaml
+      service: kafka-base
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    volumes:
+      - ./Backup/Kafka/kafka1:/tmp/kafka-logs
+    networks:
+      - network
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  kafka2:
+    container_name: kafka2.jeabc.com
+    extends:
+      file: base.yaml
+      service: kafka-base
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    volumes:
+      - ./Backup/Kafka/kafka2:/tmp/kafka-logs
+    networks:
+      - network
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  kafka3:
+    container_name: kafka3.jeabc.com
+    extends:
+      file: base.yaml
+      service: kafka-base
+    environment:
+      - KAFKA_BROKER_ID=3
+      - KAFKA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:2181,zookeeper2:2181
+    volumes:
+      - ./Backup/Kafka/kafka3:/tmp/kafka-logs
+    networks:
+      - network
+    depends_on:
+      - zookeeper0
+      - zookeeper1
+      - zookeeper2
+
+  orderer1.jeabc.com:
+    container_name: orderer1.jeabc.com
+    extends:
+      file: base.yaml
+      service: orderer-base
+    ports:
+      - 15301:7050
+    volumes:
+      - ./channel/crypto-config/ordererOrganizations/jeabc.com/orderers/orderer1.jeabc.com/:/etc/hyperledger/msp/orderer
+    networks:
+      - network
+    depends_on:
+      - kafka0
+      - kafka1
+      - kafka2
+      - kafka3
+
+  orderer2.jeabc.com:
+    container_name: orderer2.jeabc.com
+    extends:
+      file: base.yaml
+      service: orderer-base
+    ports:
+      - 15302:7050
+    volumes:
+      - ./channel/crypto-config/ordererOrganizations/jeabc.com/orderers/orderer2.jeabc.com/:/etc/hyperledger/msp/orderer
+    networks:
+      - network
+    depends_on:
+      - kafka0
+      - kafka1
+      - kafka2
+      - kafka3
+
+  orderer3.jeabc.com:
+    container_name: orderer3.jeabc.com
+    extends:
+      file: base.yaml
+      service: orderer-base
+    ports:
+      - 15303:7050
+    volumes:
+      - ./channel/crypto-config/ordererOrganizations/jeabc.com/orderers/orderer3.jeabc.com/:/etc/hyperledger/msp/orderer
+    networks:
+      - network
+    depends_on:
+      - kafka0
+      - kafka1
+      - kafka2
+      - kafka3
+
+  couchdb.peer0.customer.jeabc.com:
+    container_name: couchdb.peer0.customer.jeabc.com
+    extends:
+      file: base.yaml
+      service: couch-base
+    ports:
+      - 5984:5984
+    volumes:
+      - ./Backup/Customer/CouchDb/peer0:/opt/couchdb/data
+    networks:
+      - network
+
+  peer0.customer.jeabc.com:
+    container_name: peer0.customer.jeabc.com
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.customer.jeabc.com
+      - CORE_PEER_LOCALMSPID=CustomerMSP
+      - CORE_PEER_ADDRESS=peer0.customer.jeabc.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.customer.jeabc.com:7051
+      - CORE_PEER_LISTENADDRESS=peer0.customer.jeabc.com:7051
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.customer.jeabc.com:7051
+
+    ports:
+      - 15321:7051
+      - 15323:7053
+    volumes:
+      - /var/run/:/host/var/run/
+      - ./channel/crypto-config/peerOrganizations/customer.jeabc.com/peers/peer0.customer.jeabc.com/:/etc/hyperledger/msp/peer
+      - ./Backup/Customer/Peer/peer0:/var/hyperledger/production
+    depends_on:
+      - orderer1.jeabc.com
+      - orderer2.jeabc.com
+      - orderer3.jeabc.com
+      - couchdb.peer0.customer.jeabc.com
+    networks:
+      - network
+
+  couchdb.peer0.company.jeabc.com:
+    container_name: couchdb.peer0.company.jeabc.com
+    extends:
+      file: base.yaml
+      service: couch-base
+    ports:
+      - 5985:5984
+    volumes:
+      - ./Backup/Company/CouchDb/peer0:/opt/couchdb/data
+    networks:
+      - network
+
+  peer0.company.jeabc.com:
+    container_name: peer0.company.jeabc.com
+    extends:
+      file:   base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.company.jeabc.com
+      - CORE_PEER_LOCALMSPID=CompanyMSP
+      - CORE_PEER_ADDRESS=peer0.company.jeabc.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.company.jeabc.com:7051
+      - CORE_PEER_LISTENADDRESS=peer0.company.jeabc.com:7051
+      - CORE_PEER_GOSSIP_ENDPOINT=peer0.company.jeabc.com:7051
+    ports:
+      - 15333:7051
+      - 15335:7053
+    volumes:
+      - /var/run/:/host/var/run/
+      - ./channel/crypto-config/peerOrganizations/company.jeabc.com/peers/peer0.company.jeabc.com/:/etc/hyperledger/msp/peer
+      - ./Backup/Company/Peer/peer0:/var/hyperledger/production
+    depends_on:
+      - orderer1.jeabc.com
+      - orderer2.jeabc.com
+      - orderer3.jeabc.com
+      - couchdb.peer0.company.jeabc.com
+    networks:
+      - network
+
+ 
