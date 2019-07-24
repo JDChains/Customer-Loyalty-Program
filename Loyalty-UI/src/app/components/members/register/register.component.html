@@ -1,0 +1,23 @@
+<div class="container" style="padding-top:10px">
+  <h2>Customer Registration</h2> 
+  <form action="">
+      <div class="alert alert-info" *ngIf="result">
+          {{message}}
+      </div>        
+    <div class="col-md-6">
+        <label>Account number : </label>
+        <input type="text" class="form-control" name="accNo" [(ngModel)] ="accNo"> 
+        <label>Access ID : </label>
+        <input type="text" class="form-control" name="accId" [(ngModel)] ="accId"> 
+        <label>First name : </label>
+        <input type="text" class="form-control" name="fName" [(ngModel)] ="fName">
+        <label>Last name : </label>
+        <input type="text" class="form-control" name="lName" [(ngModel)] ="lName"> 
+        <label>Email : </label>
+        <input type="email" [(ngModel)] ="email" name="email" class="form-control"> 
+        <label>Phone number : </label>
+        <input type="text" [(ngModel)] ="pnNo" name="pnNo" class="form-control"><br>
+        <input type="button" (click)="registerMember()" class="btn btn-warning" value="Submit">
+    </div>
+  </form>
+</div>

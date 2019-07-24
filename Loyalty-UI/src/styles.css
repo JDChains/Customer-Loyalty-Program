@@ -1,0 +1,122 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+body{
+    font-family: 'Open Sans', sans-serif;
+}
+select{
+    background: none;
+    border:none;
+    border-bottom:2px solid #193295;
+    margin: 0;     
+    display: inline-block;
+  font: inherit;
+  line-height: 1.5em;
+  padding: 0.5em 3.5em 0.5em 1em; 
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+    background-image:
+    linear-gradient(45deg, transparent 50%, #193295 50%),
+    linear-gradient(135deg, #193295 50%, transparent 50%),
+    linear-gradient(to right, white, white);
+  background-position:
+    calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px),
+    100% 0;
+  background-size:
+    5px 5px,
+    5px 5px,
+    2.5em 2.5em;
+  background-repeat: no-repeat;
+}
+select select {
+    border:none;
+    display:none;
+}
+.jumbo{
+    color:#fff;
+    text-align:center;
+    padding-top:5%;
+    padding-bottom: 5%;
+}
+.link{
+    text-align: center;
+    padding:20px;
+}
+.link i{
+    font-size:60px;
+    color:#193295;
+}
+.tab-content{
+    padding-top:30px;
+}
+.linkActive{
+    background:#f90;
+    color:#fff !important;
+}
+.btn-warning{
+    background:#f90 !important;
+}
+.btn-link{
+    color:#193295 !important;
+}
+.carder{
+    cursor:pointer;
+    border:1px solid #eaeaea;
+    text-align:center;
+    border-radius:13px;
+    margin-top:20px;
+    margin-bottom:15px;
+    -webkit-box-shadow: 1px 1px 1px 0px rgba(25,50,149,0.34);
+-moz-box-shadow: 1px 1px 1px 0px rgba(25,50,149,0.34);
+box-shadow: 1px 1px 1px 0px rgba(25,50,149,0.34);
+transition: 1s;
+}
+.carder:hover{
+    text-align:center;
+    border-radius:13px;
+    margin-top:20px;
+    margin-bottom:15px;
+    -webkit-box-shadow: 1px 1px 30px 0px rgba(25,50,149,0.34);
+-moz-box-shadow: 1px 1px 30px 0px rgba(25,50,149,0.34);
+box-shadow: 1px 1px 30px 0px rgba(25,50,149,0.34);
+}
+.carder .top{
+    padding:30px;
+}
+.carder .bottom{
+    border-top:1px solid #eaeaea;
+    padding:15px;
+   
+    }
+.carder h1{
+    color:#193295;
+    font-weight: 900;
+}
+.carder i{
+    color:#193295;
+}
+.carousel-item{
+    height:300px;
+    background-size:cover !important;
+    text-align: center;
+    color:#fff;
+}
+.carousel-item-inner{
+    height:100%;
+    width: 100%;
+    background:rgba(25,50,149,0.74);
+}
+.button{
+    margin-top: 4%;
+}
+.line{
+   border-bottom: 1px solid #eaeaea;
+}
+.image{
+    width: 70%; textalign:centre;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

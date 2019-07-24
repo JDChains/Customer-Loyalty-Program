@@ -1,0 +1,59 @@
+<div class="container" style="margin-top:20px">
+    
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#home" class="btn btn-warning">Add offer</a></li>
+      <li style="margin-left:10px"><a data-toggle="tab" href="#menu1" class="btn btn-warning">History</a></li>
+      <li style="margin-left:10px"><a data-toggle="tab" (click)="logout()" class="btn btn-warning">Logout</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="home" class="tab-pane fade in active">
+          <div class="alert alert-success" *ngIf="success">
+              {{message}}
+            </div>
+        <div class="row">
+          <div class="col-md-6">
+              
+              <form action="">
+                  <label> Offer ID</label>
+                  <input type="text" name="offerId" class="form-control" [(ngModel)]="offerID">
+                  <label>Deal</label>
+                  <input type="text" name="deal" class="form-control" [(ngModel)]="deals">
+                  <label>Type</label>
+                  <select [(ngModel)]="type" class="form-control" name="type">
+                    <option value="Purchase">Purchase</option>
+                    <option value="Redemption">Redemption</option>
+                  </select>
+                  <label>Coins</label>
+                  <input type="text" class="form-control" name="points" [(ngModel)]="coins" >
+                  <input type="button" class="btn btn-warning button" value="submit" (click)="AddOffer()">
+                </form>
+          </div>
+        </div>
+        
+      </div>
+      <div id="menu1" class="tab-pane fade">
+        <div class="accordion" id="accordionExample">
+          <div class="card" *ngFor="let h of history">
+            <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  {{h.TxId}}
+                </button>
+              </h5>
+            </div>
+        
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+              <div class="card-body">
+                <b>User : </b> {{h.value.User}} <br>
+                <b>Type : </b> {{h.value.Type}} <br>
+                <b>Point credit</b> {{h.value.PointCredit}}
+                <b>Point debit</b> {{h.value.PointDebit}}
+                <b>Point debit</b> {{h.value.User}}<br>
+                <b>TimeStamp</b> {{h.timestamp}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
