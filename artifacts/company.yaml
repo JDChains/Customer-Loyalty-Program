@@ -10,3 +10,4 @@ client:
     path: "./key/fabric-client-kv-company"
     cryptoStore:
       path: "./key/cryptoStore/company"
+#------------------------------------------------------
